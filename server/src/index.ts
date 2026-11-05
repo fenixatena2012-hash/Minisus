@@ -44,7 +44,7 @@ app.get("/api/me", auth, async (req: any, res) => {
 });
 app.get("/api/friends", auth, async (req: any, res) => {
   const rows = await prisma.friendship.findMany({ where: { OR: [{ senderId: req.user.id }, { receiverId: req.user.id }] }, include: { sender: { select: { id: true, username: true } }, receiver: { select: { id: true, username: true } } } });
-  res.json(rows.map(r => ({ id: r.id, status: r.status, user: r.senderId === req.user.id ? r.receiver : r.sender })));
+  res.json(rows.map((r: any) => ({ id: r.id, status: r.status, user: r.senderId === req.user.id ? r.receiver : r.sender })));
 });
 app.post("/api/friends", auth, async (req: any, res) => {
   const target = await prisma.user.findUnique({ where: { username: String(req.body.username || "") } });
